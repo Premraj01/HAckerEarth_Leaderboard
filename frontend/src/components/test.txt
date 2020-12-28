@@ -1,0 +1,66 @@
+/** @format */
+
+import React, { Fragment, useEffect, useState } from 'react'
+
+import { useDispatch, useSelector } from 'react-redux'
+import { Table, Form } from 'react-bootstrap'
+import { getTeams } from '../actions/leaderboardActions'
+import Input from './Input'
+
+const Leaderboard = ({ match }) => {
+  // const pageNumber = match.params.pageNumber || 1
+
+  const [ids, setIds] = useState([])
+  const [id, setId] = useState('')
+  const [count, setCount] = useState(0)
+
+  const dispatch = useDispatch()
+
+  const teamDetails = useSelector((state) => state.teamDetails)
+  const { loading, error, teams } = teamDetails
+
+  useEffect(() => {
+    setId((ids) => [...ids, id])
+  }, [Input])
+
+  console.log(ids)
+  useEffect(() => {
+    dispatch(getTeams())
+  }, [dispatch])
+
+  return (
+    <Fragment>
+      <Table className='table table-hover'>
+        <thead>
+          <tr>
+            <th>Team NAME</th>
+            <th>Wins</th>
+            <th>Loose</th>
+            <th>Ties</th>
+            <th>Score</th>
+            <th>Select</th>
+            <th>Winner</th>
+            <th>Declare Winner</th>
+          </tr>
+        </thead>
+        <tbody>
+          {teams.map((team) => (
+            <tr key={team._id}>
+              <td>{team.team_name}</td>
+              <td>{team.wins}</td>
+              <td>{team.losses}</td>
+              <td>{team.ties}</td>
+              <td>{team.score}</td>
+
+              <td>
+                <Input id ={onClick={() => team._id}} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </Fragment>
+  )
+}
+
+export default Leaderboard
